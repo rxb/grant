@@ -6,6 +6,8 @@ var grant = require('../../').express()
 
 var app = express()
   .use(session({secret: 'grant', saveUninitialized: true, resave: false}))
+  .use(express.json({limit: '5mb'}))
+  .use(express.urlencoded({ limit: '5mb', extended: true }))
   .use(grant(require('./config.js')))
   .get('/hello', (req, res) => {
     res.end(JSON.stringify(req.session.grant.response, null, 2))
