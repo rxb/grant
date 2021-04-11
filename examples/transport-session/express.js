@@ -1,16 +1,23 @@
-
+var https = require('https');
+var fs = require("fs");
 var express = require('express')
 var session = require('express-session')
 var grant = require('../../').express()
 
-
-express()
+var app = express()
   .use(session({secret: 'grant', saveUninitialized: true, resave: false}))
-  .use(grant(require('./config.json')))
+  .use(grant(require('./config.js')))
   .get('/hello', (req, res) => {
     res.end(JSON.stringify(req.session.grant.response, null, 2))
   })
   .get('/hi', (req, res) => {
     res.end(JSON.stringify(req.session.grant.response, null, 2))
-  })
-  .listen(3000)
+  });
+
+var server = https.createServer({
+  key: fs.readFileSync('/Users/Richard/localhost.key'),
+  cert: fs.readFileSync('/Users/Richard/localhost.crt')
+}, app).listen(443);
+
+
+
